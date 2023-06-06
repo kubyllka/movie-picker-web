@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "proxy": "http://127.0.0.1:8000/",
   "scripts": {
-    "dev": "webpack --mode development --watch",
+    "start": "webpack serve --mode development --port 4000",
     "build": "webpack --mode production"
   },
   "keywords": [],
@@ -18,7 +19,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "webpack": "^5.84.1",
-    "webpack-cli": "^5.1.1"
+    "webpack-cli": "^5.1.1",
+    "webpack-dev-server": "^4.15.0"
   },
   "dependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",

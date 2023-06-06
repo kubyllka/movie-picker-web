@@ -19,6 +19,7 @@ from .views import index
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path("react", index),
+    path('', index),
+    path('movieTest', index)
 ]
 

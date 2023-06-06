@@ -1,0 +1,110 @@
+{
+  "questions": [
+    {
+      "question": "How do you feel about movies with a twist ending?",
+      "answers": [
+        {
+          "text": "Love them, they keep me guessing",
+          "tags": ["twist ending", "unpredictable", "plot twist"]
+        },
+        {
+          "text": "Not a fan, prefer straightforward narratives",
+          "tags": ["straightforward plot", "predictable", "clear resolution"]
+        },
+        {
+          "text": "It depends on the execution",
+          "tags": ["well-executed twist", "clever storytelling", "unexpected revelations"]
+        }
+      ]
+    },
+    {
+      "question": "Do you enjoy movies with mind-bending concepts?",
+      "answers": [
+        {
+          "text": "Yes, they challenge my perception",
+          "tags": ["mind-bending", "complex concepts", "reality manipulation"]
+        },
+        {
+          "text": "Not really, they confuse me",
+          "tags": ["straightforward plot", "simplicity", "easy to follow"]
+        },
+        {
+          "text": "It depends on the subject matter",
+          "tags": ["specific theme", "conceptual depth", "thematic complexity"]
+        }
+      ]
+    },
+    {
+      "question": "How important is visual style in a movie for you?",
+      "answers": [
+        {
+          "text": "Very important, it enhances the storytelling",
+          "tags": ["visual style", "cinematography", "atmospheric"]
+        },
+        {
+          "text": "Not a priority, I care more about the story",
+          "tags": ["story-driven", "plot-focused", "character development"]
+        },
+        {
+          "text": "It depends on the genre",
+          "tags": ["genre-specific visuals", "stylistic choices", "thematic consistency"]
+        }
+      ]
+    },
+    {
+      "question": "Do you enjoy movies with nonlinear narrative structures?",
+      "answers": [
+        {
+          "text": "Yes, they add depth and intrigue",
+          "tags": ["nonlinear storytelling", "multiple timelines", "narrative complexity"]
+        },
+        {
+          "text": "Not really, I prefer a linear storyline",
+          "tags": ["linear plot", "chronological order", "straightforward progression"]
+        },
+        {
+          "text": "It depends on the context",
+          "tags": ["contextual nonlinearities", "narrative experimentation", "cohesive storytelling"]
+        }
+      ]
+    },
+    {
+      "question": "How do you feel about movies with morally ambiguous characters?",
+      "answers": [
+        {
+          "text": "Love them, they offer a more realistic portrayal of human nature",
+          "tags": ["morally ambiguous", "complex characters", "shades of gray"]
+        },
+        {
+          "text": "Not a fan, I prefer clear-cut heroes and villains",
+          "tags": ["morally upright protagonist", "clear moral values", "heroic archetype"]
+        },
+        {
+          "text": "It depends on the context",
+          "tags": ["contextual moral ambiguity", "ethical dilemmas", "nuanced character development"]
+        }
+      ]
+    },
+    {
+      "question": "How do you usually feel after watching a movie?",
+      "answers": [
+        {
+          "text": "Happy",
+          "tags": ["feel-good"]
+        },
+        {
+          "text": "Sad",
+          "tags": ["emotional"]
+        },
+        {
+          "text": "Excited",
+          "tags": ["adventure"]
+        },
+        {
+          "text": "Thoughtful",
+          "tags": ["drama"]
+        }
+      ]
+    }
+  ]
+}
