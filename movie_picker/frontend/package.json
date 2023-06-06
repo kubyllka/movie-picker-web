@@ -5,7 +5,7 @@
   "main": "index.js",
   "proxy": "http://127.0.0.1:8000/",
   "scripts": {
-    "start": "webpack serve --mode development --port 4000",
+    "start": "webpack --mode development --watch",
     "build": "webpack --mode production"
   },
   "keywords": [],

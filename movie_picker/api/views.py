@@ -15,24 +15,24 @@ class MovieView(generics.ListAPIView):
     serializer_class = MovieSerializer
 
 
-class TestSubmitView(View):
+class TestSubmitView(APIView):
     def post(self, request):
         # Отримання даних з POST-запиту у форматі JSON
         try:
-            data = json.loads( request.body )
-            answers = data.get( 'answers' )
-            tags = data.get( 'tags' )
+            data = request.data  # Отримати дані замість request.body
+            answers = data.get('answers')
+            tags = data.get('tags')
 
             # Обробка даних
             # TODO: Ваш код обробки даних
 
             # Повернення відповіді
             response_data = {
-                'message': 'Data received successfully',
+                'message': tags
             }
-            return JsonResponse( response_data )
+            return JsonResponse(response_data)
         except json.JSONDecodeError:
             response_data = {
                 'error': 'Invalid JSON payload',
             }
-            return JsonResponse( response_data, status=400 )
+            return JsonResponse(response_data, status=400)
