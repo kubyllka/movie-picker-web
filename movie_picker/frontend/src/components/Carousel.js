@@ -8,7 +8,7 @@ import odyssey from "../../static/images/carousel-kubrick-stare/space-odyssey.pn
 const Slider = () => {
   return (
       <Carousel>
-          <Carousel.Item style = {{'height': '600px'}}>
+          <Carousel.Item style = {{'height': '550px'}}>
               <img src={shining} className = "d-block w-100" alt="The Shining"/>
               <Carousel.Caption>
                 <h1>
@@ -17,7 +17,7 @@ const Slider = () => {
                   <p>Movie that we recommend to everyone</p>
               </Carousel.Caption>
           </Carousel.Item>
-          <Carousel.Item style = {{'height': '600px'}}>
+          <Carousel.Item style = {{'height': '550px'}}>
               <img src={orange} className = "d-block w-100" alt="The Shining"/>
               <Carousel.Caption>
                 <h1>
@@ -26,7 +26,7 @@ const Slider = () => {
                   <p>Movie that we recommend to everyone</p>
               </Carousel.Caption>
           </Carousel.Item>
-          <Carousel.Item style = {{'height': '600px'}}>
+          <Carousel.Item style = {{'height': '550px'}}>
               <img src={odyssey} className = "d-block w-100" alt="2001: A Space Odyssey"/>
               <Carousel.Caption>
                 <h1>

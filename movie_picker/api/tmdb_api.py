@@ -8,7 +8,7 @@ api_key = "fe8f0ac0a3d28301a5a540414d3052a2"
 
 def fetch_movie_details():
     # URL запиту до TMDb API для отримання деталей фільмів
-    url = f'https://api.themoviedb.org/3/movie/top_rated?api_key={api_key}&page=4'
+    url = f'https://api.themoviedb.org/3/movie/top_rated?api_key={api_key}&page=5'
 
 
     try:

@@ -5,6 +5,7 @@ import HomePage from "./HomePage"
 import MovieTestPage from "./MovieTestPage";
 import NavBar from "./NaviBar"
 import 'bootstrap/dist/css/bootstrap.min.css';
+import RandomMovie from "./RandomMoviePage";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/movieTest" element={<MovieTestPage />} />
           <Route path="/login" element={<MovieTestPage />} />
+          <Route path="/randomMovie" element={<RandomMovie />} />
       </Routes>
     </Router>
   );

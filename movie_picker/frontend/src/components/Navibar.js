@@ -19,6 +19,7 @@ const NavBar = () => {
           <Nav.Link as={Link} to="/movieTest" style={{ marginLeft: "10px" }} className="nav-link">
             Test
           </Nav.Link>
+
         </Nav>
       </Navbar.Collapse>
     </Navbar>
