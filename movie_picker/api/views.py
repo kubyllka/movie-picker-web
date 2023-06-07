@@ -1,18 +1,20 @@
 from django.shortcuts import render
 from rest_framework import generics, status
 from rest_framework.utils import json
-from .models import Movie
-from .serializers import MovieSerializer
+#from .models import MovieInfo
+#from .serializers import MovieSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.http import JsonResponse
 from django.views import View
 import json
+import requests
 
 # Create your views here.
 class MovieView(generics.ListAPIView):
-    queryset = Movie.objects.all()
-    serializer_class = MovieSerializer
+    pass
+   # queryset = MovieInfo.objects.all()
+    #serializer_class = MovieSerializer
 
 
 class TestSubmitView(APIView):
@@ -36,3 +38,9 @@ class TestSubmitView(APIView):
                 'error': 'Invalid JSON payload',
             }
             return JsonResponse(response_data, status=400)
+
+
+
+
+
+

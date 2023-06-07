@@ -1,5 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Button from '@mui/material/Button';
+
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Button from "react-bootstrap/Button"
 
 const Test = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -53,7 +57,7 @@ const Test = () => {
   };
 
   return (
-    <div>
+    <div style={{ maxHeight: '4300px', overflow: 'auto' }}>
       <h2>Тест</h2>
       {isLoading ? (
         <p>Loading questions...</p>
@@ -61,21 +65,33 @@ const Test = () => {
         <>
           {questions.map((question) => (
             <div key={question.question}>
-              <label htmlFor={question.question}>{question.question}:</label>
-              <select
-                id={question.question}
-                onChange={(e) => handleAnswerChange(question.question, e.target.value)}
+              <p>{question.question}:</p>
+              <RadioGroup
+                name={question.question}
+                onChange={(e) =>
+                  handleAnswerChange(question.question, {
+                    text: e.target.value,
+                    tags: question.answers.find((answer) => answer.text === e.target.value).tags,
+                  })
+                }
               >
-                <option value="">Select an answer</option>
                 {question.answers.map((answer) => (
-                  <option key={answer.text} value={answer.text}>
-                    {answer.text}
-                  </option>
+                  <FormControlLabel
+                    key={answer.text}
+                    value={answer.text}
+                    control={<Radio />}
+                    label={answer.text}
+                  />
                 ))}
-              </select>
+              </RadioGroup>
             </div>
           ))}
-           <Button variant="contained" color="primary" onClick={handleSubmit} disabled={submitting}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleSubmit}
+            disabled={submitting}
+          >
             {submitting ? 'Submitting...' : 'Send'}
           </Button>
         </>

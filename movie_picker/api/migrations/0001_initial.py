@@ -10,24 +10,4 @@ class Migration(migrations.Migration):
     dependencies = []
 
     operations = [
-        migrations.CreateModel(
-            name="Movie",
-            fields=[
-                (
-                    "id",
-                    models.BigAutoField(
-                        auto_created=True,
-                        primary_key=True,
-                        serialize=False,
-                        verbose_name="ID",
-                    ),
-                ),
-                ("title", models.CharField(max_length=255)),
-                ("overview", models.TextField()),
-                ("poster_path", models.CharField(max_length=255)),
-                ("release_date", models.DateField()),
-                ("vote_average", models.FloatField()),
-                ("genres", models.CharField(max_length=255)),
-            ],
-        ),
     ]
