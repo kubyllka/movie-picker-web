@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
+    'rest_framework_simplejwt',
     'api.apps.ApiConfig',
     'frontend.apps.FrontendConfig',
     'corsheaders',
@@ -117,6 +118,10 @@ CORS_ALLOW_CREDENTIALS = False
 ALLOWED_HOSTS = ["*"]
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_SAVE_EVERY_REQUEST = True
+
 
 STATIC_URL = "/static/"
 

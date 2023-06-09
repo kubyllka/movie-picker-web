@@ -10,24 +10,26 @@ export const HomePage = () => {
   const containerStyles = {
     backgroundColor: "black",
     color: "white",
-    padding: "20px",
+    padding: "0px",
+      overflowY: "auto",
+      minHeight: "100vh",
 
   };
 
   const contentStyles = {
     display: "flex",
     alignItems: "center",
-    justifyContent: "flex-start",
+    justifyContent: "flex-start", padding: "20px"
 
   };
 
   return (
-    <div style={pageStyles} className="page-container">
-      <Slider />
-      <Container fluid className="text-center"  style={containerStyles}>
-        <Row>
-          <Col md={7}>
-            <img src={logo} alt="" height={400} />
+      <Container fluid={true} style={containerStyles}>
+         <Slider />
+        <Container>
+           <Row>
+          <Col md={5}>
+            <img style = {contentStyles} src={logo} alt="" height={400} />
           </Col>
           <Col md={5} style={contentStyles}>
             <div>
@@ -39,7 +41,8 @@ export const HomePage = () => {
 
                 Take a short test and we will recommend you some movies
               </p>
-              <Link to="/movieTest">
+                <Row>
+                 <Link to="/movieTest">
                 <Button variant="light">
                   Take a test
                 </Button>
@@ -50,19 +53,23 @@ export const HomePage = () => {
                   Get random movie
                 </Button>
               </Link>
+                </Row>
             </div>
           </Col>
         </Row>
+        </Container>
       </Container>
-    </div>
   )
 };
 
-const pageStyles = {
-  minHeight: "100vh",
-  display: "flex",
-  flexDirection: "column",
-  overflowY: "auto",
-};
+const containerStyles = {
+    backgroundColor: "black",
+    minHeight: "100vh",
+    overflowY: "auto",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative"
+  };
 
 export default HomePage;

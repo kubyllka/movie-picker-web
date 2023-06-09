@@ -5,7 +5,7 @@ import logo from "../../static/images/logo.png";
 
 const NavBar = () => {
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
+    <Navbar bg="dark" variant="dark" expand="lg">
       <Navbar.Brand as={Link} to="/">
         <img src={logo} alt="Logo" style={{ marginRight: "20px" }} height="50" />
         KubrickStare

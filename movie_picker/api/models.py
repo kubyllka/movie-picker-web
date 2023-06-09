@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 
-# Creating general model that describe movie
-
 
 class Genre(models.Model):
     tmdb_id = models.IntegerField()

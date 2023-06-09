@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics, status
+from rest_framework.decorators import api_view
 from rest_framework.utils import json
 from django.db.models import Max
 from rest_framework.views import APIView
@@ -7,7 +8,13 @@ from django.http import JsonResponse
 from random import randint
 from .models import Movie
 import json
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer
+from .serializers import MovieSerializer
+from .movie_recommendation_model import MovieRecommendationModel
+import logging
 
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 class MovieView(generics.ListAPIView):
@@ -18,16 +25,11 @@ class MovieView(generics.ListAPIView):
 
 class TestSubmitView(APIView):
     def post(self, request):
-        # Отримання даних з POST-запиту у форматі JSON
         try:
-            data = request.data  # Отримати дані замість request.body
-            answers = data.get('answers')
+            data = request.session.data
+            answers =  data.get('answers')
             tags = data.get('tags')
 
-            # Обробка даних
-            # TODO: Ваш код обробки даних
-
-            # Повернення відповіді
             response_data = {
                 'message': tags
             }
@@ -38,41 +40,47 @@ class TestSubmitView(APIView):
             }
             return JsonResponse(response_data, status=400)
 
-def get_random_movie(request):
-    # максимальний id фільму
-    max_id = Movie.objects.aggregate(max_id=Max("id"))["max_id"]
 
+def get_random_movie(request):
+    max_id = Movie.objects.aggregate(max_id=Max("id"))["max_id"]
     while True:
-        # випадковий id фільму
-        random_id = randint( 1, max_id )
+        random_id = randint(1, max_id)
         try:
-            # рандомний фільм з бази даних
-            random_movie = Movie.objects.get( id=random_id )
+            random_movie = Movie.objects.get(id=random_id)
             break
         except Movie.DoesNotExist:
-            # якщо фільму з таким айді не існує, продовжити генерацію нового айді
             continue
 
-    # список жанрів фільму
-    genres = [genre.genre for genre in random_movie.genres.all()]
-
-    # список тегів фільму
-    keywords = [keyword.keyword for keyword in random_movie.keywords.all()]
-
-    # Створити JSON-відповідь з даними фільму, тегами і жанрами
-    movie_data = {
-        "title": random_movie.title,
-        "overview": random_movie.overview,
-        "poster_path": random_movie.poster_path,
-        "year": random_movie.year,
-        "vote_average": random_movie.vote_average,
-        "trailer_link": random_movie.trailer_link,
-        "genres": genres,
-        "keywords": keywords
-    }
-    return JsonResponse(movie_data)
+    serializer = MovieSerializer(random_movie)
+    return JsonResponse(serializer.data)
 
 
+@api_view(['GET', 'POST'])
+def movie_test_data(request):
+    if request.method == 'POST':
+        movies = request.data
+        logger.info(movies)
+        rec = MovieRecommendationModel(movies)
+        recommended_movies = rec.recommend_movies()
+        print(recommended_movies)
+        response_data = {
+            'message': 'Recommendation successful',
+            'recommended_movies': recommended_movies
+        }
+        return JsonResponse(response_data)
+    else:
+        max_id = Movie.objects.aggregate(max_id=Max("id"))["max_id"]
+        random_movies = []
+        while len(random_movies) < 10:
+            random_id = randint(1, max_id)
+            try:
+                random_movie = Movie.objects.get(id=random_id)
+                if random_movie not in random_movies:
+                    random_movies.append(random_movie)
+            except Movie.DoesNotExist:
+                continue
+        serializer = MovieSerializer(random_movies, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
 
 

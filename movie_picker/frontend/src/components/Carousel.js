@@ -18,10 +18,10 @@ const Slider = () => {
               </Carousel.Caption>
           </Carousel.Item>
           <Carousel.Item style = {{'height': '550px'}}>
-              <img src={orange} className = "d-block w-100" alt="The Shining"/>
+              <img src={orange} className = "d-block w-100" alt="A Clockwork Orange"/>
               <Carousel.Caption>
                 <h1>
-                    The Shining
+                    A Clockwork Orange
                 </h1>
                   <p>Movie that we recommend to everyone</p>
               </Carousel.Caption>

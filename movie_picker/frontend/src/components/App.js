@@ -10,13 +10,12 @@ import RandomMovie from "./RandomMoviePage";
 const App = () => {
   return (
     <Router>
-        <NavBar/>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/movieTest" element={<MovieTestPage />} />
-          <Route path="/login" element={<MovieTestPage />} />
+          <Route path="/movieTest" element={<MovieTestPage />} />
           <Route path="/randomMovie" element={<RandomMovie />} />
       </Routes>
+        <NavBar />
     </Router>
   );
 };
