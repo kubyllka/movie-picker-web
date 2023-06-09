@@ -9,7 +9,7 @@ api_key = "fe8f0ac0a3d28301a5a540414d3052a2"
 
 def fetch_movie_details():
     # URL of request
-    url = f'https://api.themoviedb.org/3/movie/top_rated?api_key={api_key}&page=6'
+    url = f'https://api.themoviedb.org/3/movie/top_rated?api_key={api_key}&page=7'
     try:
         # Request to TMDb API
         response = requests.get(url)
@@ -75,7 +75,7 @@ def fetch_movie_details():
 
 def get_trailer_link(movie_id):
 
-    # URL запиту до TMDb API для отримання посилання на трейлер фільму
+    # URL TMDB API-request
     url = f'https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={api_key}'
 
     try:

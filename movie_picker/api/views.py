@@ -58,11 +58,10 @@ def get_random_movie(request):
 @api_view(['GET', 'POST'])
 def movie_test_data(request):
     if request.method == 'POST':
-        movies = request.data
+        movies = json.loads(request.body)
         logger.info(movies)
         rec = MovieRecommendationModel(movies)
         recommended_movies = rec.recommend_movies()
-        print(recommended_movies)
         response_data = {
             'message': 'Recommendation successful',
             'recommended_movies': recommended_movies
