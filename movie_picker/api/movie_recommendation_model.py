@@ -20,7 +20,6 @@ class MovieRecommendationModel:
             keywords_string = ' '.join([str(keyword) for keyword in movie.keywords.all()])
             text = movie.overview + ' ' + genres_string + ' ' + keywords_string
             movie_vectors.append(text)
-
         return movie_vectors
 
     def create_vectorizer(self):

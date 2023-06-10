@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', index),
     path('movieTest', index),
-    path('randomMovie', index)
+    path('randomMovie', index),
+    path('result', index)
 ]
 

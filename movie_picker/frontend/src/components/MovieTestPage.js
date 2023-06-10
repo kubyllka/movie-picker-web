@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Card, Container, Row, Col, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 const RandomMovie = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const navigate  = useNavigate();
   const fetchRandomMovies = () => {
     fetch("http://127.0.0.1:8000/api/test/")
       .then((response) => response.json())
@@ -24,7 +26,34 @@ const RandomMovie = () => {
     fetchRandomMovies();
   }, []);
 
-  const containerStyles = {
+  const handleMovieSelect = (movie) => {
+    const isSelected = selectedMovies.includes(movie);
+    if (isSelected) {
+      setSelectedMovies(selectedMovies.filter((selectedMovie) => selectedMovie !== movie));
+    } else {
+      setSelectedMovies([...selectedMovies, movie]);
+    }
+  };
+
+ const handleFinishTest = () => {
+  fetch('http://127.0.0.1:8000/api/test/', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(selectedMovies),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log('Recommendation:', data.recommended_movies);
+      navigate("/result", { state: { data: data.recommended_movies } });
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+};
+
+ const containerStyles = {
     backgroundColor: "black",
     minHeight: "100vh",
     overflowY: "auto",
@@ -78,32 +107,6 @@ const RandomMovie = () => {
   const trailerButtonStyles = {
     marginLeft: "30px",
   };
-
-  const handleMovieSelect = (movie) => {
-    const isSelected = selectedMovies.includes(movie);
-    if (isSelected) {
-      setSelectedMovies(selectedMovies.filter((selectedMovie) => selectedMovie !== movie));
-    } else {
-      setSelectedMovies([...selectedMovies, movie]);
-    }
-  };
-
- const handleFinishTest = () => {
-  fetch('http://127.0.0.1:8000/api/test/', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(selectedMovies),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log('Recommendation:', data.recommended_movies);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-};
 
 
   return (
