@@ -2,11 +2,12 @@ import React, { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 
 const LoginModal = ({ show, handleClose, handleShow }) => {
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [usernameError, setUsernameError] = useState(false); // Додали стан для помилки імені користувача
-  const [passwordError, setPasswordError] = useState(false); // Додали стан для помилки пароля
+  const [usernameError, setUsernameError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
 
   const handleLogin = () => {
     if (!username || !password) {

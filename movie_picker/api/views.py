@@ -1,4 +1,6 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.utils import json
@@ -6,7 +8,7 @@ from django.db.models import Max
 from rest_framework.views import APIView
 from django.http import JsonResponse
 from random import randint
-from .models import Movie
+from .models import Movie, WatchLaterMovie
 import json
 from .serializers import MovieSerializer
 from .movie_recommendation_model import MovieRecommendationModel
@@ -15,6 +17,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 logger = logging.getLogger(__name__)
 
@@ -23,6 +28,18 @@ class MovieView(generics.ListAPIView):
     pass
    # queryset = MovieInfo.objects.all()
     #serializer_class = MovieSerializer
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add custom claims
+        token['username'] = user.username
+        # ...
+
+        return token
 
 
 class TestSubmitView(APIView):
@@ -99,11 +116,16 @@ def check_correct_log_in(request):
         return JsonResponse({"success": False})
 
 
+from django.contrib.auth import authenticate, login
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+
 class LoginView(APIView):
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
-        user = authenticate(username=username, password=password)
+        user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             refresh = RefreshToken.for_user(user)
@@ -114,3 +136,42 @@ class LoginView(APIView):
             })
         else:
             return Response({'success': False}, status=401)
+
+
+@csrf_exempt
+@login_required
+def add_to_watch_later(request):
+    if request.method == 'POST':
+        data = json.loads( request.body )
+        movie_id = data.get( 'movieId' )
+        movie = Movie.objects.get( id=movie_id )
+        user = request.user
+
+        if WatchLaterMovie.objects.filter(user=user, movie=movie).exists():
+            return JsonResponse({'message': 'Movie is already in WatchLater'}, status=400)
+
+        WatchLaterMovie.objects.create(user=user, movie=movie)
+
+        return JsonResponse({'message': 'Movie added to WatchLater'}, status=201)
+
+    return JsonResponse({'message': 'Invalid request'}, status=400)
+
+
+@csrf_exempt
+@login_required
+def remove_from_watch_later(request):
+    if request.method == 'POST':
+        data = json.loads( request.body )
+        movie_id = data.get( 'movieId' )
+        movie = Movie.objects.get( id=movie_id )
+        user = request.user
+
+        watch_later_movie = WatchLaterMovie.objects.filter(user=user, movie=movie).first()
+        if not watch_later_movie:
+            return JsonResponse({'message': 'Movie is not in WatchLater'}, status=400)
+
+        watch_later_movie.delete()
+
+        return JsonResponse({'message': 'Movie removed from WatchLater'}, status=200)
+
+    return JsonResponse({'message': 'Invalid request'}, status=400)

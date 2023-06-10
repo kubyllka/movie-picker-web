@@ -5,9 +5,15 @@ import { Card, Container, Row, Col, Button } from "react-bootstrap";
 const RandomMovie = () => {
   const [movie, setMovie] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const fetchRandomMovie = () => {
-    fetch("http://127.0.0.1:8000/api/random_movie/")
+    fetch("http://127.0.0.1:8000/api/random_movie/", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Передача JWT-токена у заголовках
+      },
+    })
       .then(response => response.json())
       .then(data => {
         setMovie(data);
@@ -21,6 +27,54 @@ const RandomMovie = () => {
 
   useEffect(() => {
     fetchRandomMovie();
+  }, []);
+
+  const addToWatchLater = () => {
+    fetch("http://127.0.0.1:8000/api/add_to_watch_later/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Передача JWT-токена у заголовках
+      },
+      body: JSON.stringify({ movieId: movie.id }),
+    })
+      .then(response => {
+        if (response.ok) {
+          setIsFavorite(true);
+        } else {
+          console.log("Failed to add movie to WatchLater");
+        }
+      })
+      .catch(error => {
+        console.log("Error adding movie to WatchLater:", error);
+      });
+  };
+
+  const removeFromWatchLater = () => {
+    fetch("http://127.0.0.1:8000/api/remove_from_watch_later/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Передача JWT-токена у заголовках
+      },
+      body: JSON.stringify({ movieId: movie.id }),
+    })
+      .then(response => {
+        if (response.ok) {
+          setIsFavorite(false);
+        } else {
+          console.log("Failed to remove movie from WatchLater");
+        }
+      })
+      .catch(error => {
+        console.log("Error removing movie from WatchLater:", error);
+      });
+  };
+
+  useEffect(() => {
+    // Перевірка, чи користувач авторизований
+    const token = localStorage.getItem('token');
+    setIsAuthenticated(!!token);
   }, []);
 
   const containerStyles = {
@@ -91,6 +145,11 @@ const RandomMovie = () => {
                   <Button variant="outline-light" href={movie.trailer_link} style={trailerButtonStyles}>
                     Trailer
                   </Button>
+                  {isAuthenticated && (
+                    <Button variant="outline-light" onClick={isFavorite ? removeFromWatchLater : addToWatchLater}>
+                      {isFavorite ? "Remove from WatchLater" : "Add to WatchLater"}
+                    </Button>
+                  )}
                 </Col>
               </Row>
             </Card.Body>
