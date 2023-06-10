@@ -11,13 +11,13 @@ import ResultPage from "./ResultPage";
 const App = () => {
   return (
     <Router>
+        <NavBar />
       <Routes>
         <Route path="/" element={<HomePage />} />
           <Route path="/movieTest" element={<MovieTestPage />} />
           <Route path="/randomMovie" element={<RandomMovie />} />
           <Route path="/result" element={<ResultPage />} />
       </Routes>
-        <NavBar />
     </Router>
   );
 };

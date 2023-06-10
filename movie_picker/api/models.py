@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.postgres.fields import ArrayField
-
+from django.contrib.auth.models import User
 
 class Genre(models.Model):
     tmdb_id = models.IntegerField()
@@ -49,3 +48,7 @@ class UserInfo(models.Model):
     passwd = models.CharField(max_length=50)
 
 
+class WatchLaterMovie(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)

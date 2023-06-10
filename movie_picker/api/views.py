@@ -8,11 +8,13 @@ from django.http import JsonResponse
 from random import randint
 from .models import Movie
 import json
-from sklearn.metrics.pairwise import cosine_similarity
-from sklearn.feature_extraction.text import TfidfVectorizer
 from .serializers import MovieSerializer
 from .movie_recommendation_model import MovieRecommendationModel
 import logging
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 logger = logging.getLogger(__name__)
 
@@ -82,4 +84,33 @@ def movie_test_data(request):
         return JsonResponse(serializer.data, safe=False)
 
 
+@api_view(['GET', 'POST'])
+def check_correct_log_in(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get("username")
+        password = data.get("password")
+        try:
+            user = User.objects.get(username=username, password=password)
+            return JsonResponse({"success": True})
+        except User.DoesNotExist:
+            return JsonResponse({"success": False})
+    else:
+        return JsonResponse({"success": False})
 
+
+class LoginView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+                'success': True
+            })
+        else:
+            return Response({'success': False}, status=401)
