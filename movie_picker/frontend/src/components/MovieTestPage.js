@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card, Container, Row, Col, Button } from "react-bootstrap";
+import {
+  Card,
+  Container,
+  Row,
+  Col,
+  Button, ButtonGroup
+} from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+
 
 const RandomMovie = () => {
   const [movies, setMovies] = useState([]);
@@ -14,6 +21,7 @@ const RandomMovie = () => {
   const fetchRandomMovies = () => {
     fetch("http://127.0.0.1:8000/api/test/", {
         headers: {
+            "Content-Type": "application/json",
       },
     })
       .then((response) => response.json())
@@ -37,7 +45,7 @@ const RandomMovie = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem('access')}`, // Передача JWT-токена у заголовках
+        Authorization: `Bearer ${localStorage.getItem('access')}`,
       },
       body: JSON.stringify({ movieId: movie.id }),
     })
@@ -171,41 +179,56 @@ const RandomMovie = () => {
 
 
   return (
-    <Container fluid = {true} style={containerStyles}>
-
+      <Container fluid={true} style={containerStyles}>
       {!isLoading && movies.length > 0 && (
         <Container fluid={true}>
           {movies.map((movie) => (
             <Card key={movie.id} style={cardStyles}>
               <Row>
                 <Col md={3}>
-                  <Card.Img variant="top" src={movie.poster_path} alt={movie.title} style={imageStyles} />
+                  <Card.Img
+                    variant="top"
+                    src={movie.poster_path}
+                    alt={movie.title}
+                    style={imageStyles}
+                  />
                 </Col>
                 <Col md={8}>
                   <Card.Body>
                     <Card.Title style={titleStyles}>{movie.title}</Card.Title>
                     <Card.Text style={overviewStyles}>{movie.overview}</Card.Text>
                     <Card.Text style={yearStyles}>Year: {movie.year}</Card.Text>
-                    <Card.Text style={voteAverageStyles}>Vote Average: {movie.vote_average}</Card.Text>
-                    <Card.Text style={genresStyles}>Genres: {movie.genres.join(", ")}</Card.Text>
-                    <Card.Text style={keywordsStyles}>Keywords: {movie.keywords.join(", ")}</Card.Text>
-                    <Button
-                      variant={selectedMovies.includes(movie) ? "primary" : "outline-primary"}
-                      onClick={() => handleMovieSelect(movie)}
-                    >
-                      {selectedMovies.includes(movie) ? "Selected" : "Select"}
-                    </Button>
-                    <Button variant="outline-light" href={movie.trailer_link} style={trailerButtonStyles}>
-                    Trailer
-                  </Button>
-                      {isAuthenticated && (
+                    <Card.Text style={voteAverageStyles}>
+                      Vote Average: {movie.vote_average}
+                    </Card.Text>
+                    <Card.Text style={genresStyles}>
+                      Genres: {movie.genres.join(", ")}
+                    </Card.Text>
+                    <Card.Text style={keywordsStyles}>
+                      Keywords: {movie.keywords.join(", ")}
+                    </Card.Text>
+
+                    <ButtonGroup>
                       <Button
-                        variant="outline-light"
-                        onClick={() => (isFavorite[movie.id] ? removeFromWatchLater(movie) : addToWatchLater(movie))}
+                        variant={selectedMovies.includes(movie) ? "primary" : "outline-primary"}
+                        onClick={() => handleMovieSelect(movie)}
+                      >
+                        {selectedMovies.includes(movie) ? "Selected" : "Select"}
+                      </Button>
+                      <Button variant="outline-light" href={movie.trailer_link}>
+                        Trailer
+                      </Button>
+                        {isAuthenticated && (
+                      <Button
+                        variant={isFavorite[movie.id] ? "light" : "outline-light"}
+                        onClick={() =>
+                          isFavorite[movie.id] ? removeFromWatchLater(movie) : addToWatchLater(movie)
+                        }
                       >
                         {isFavorite[movie.id] ? "Remove from WatchLater" : "Add to WatchLater"}
                       </Button>
                     )}
+                    </ButtonGroup>
                   </Card.Body>
                 </Col>
               </Row>

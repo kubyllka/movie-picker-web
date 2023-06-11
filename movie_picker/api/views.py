@@ -179,3 +179,18 @@ def remove_from_watch_later(request):
         return JsonResponse({'message': 'Movie removed from WatchLater'}, status=200)
 
     return JsonResponse({'message': 'Invalid request'}, status=400)
+
+
+@csrf_exempt
+@login_required
+def watchlist(request):
+    if request.method == 'GET':
+        user = request.user
+        watch_later_movies = WatchLaterMovie.objects.filter(user=user)
+        if not watch_later_movies:
+            return JsonResponse({'message': 'No movies in watchlist'}, status=400)
+        movie_ids = [movie.movie_id for movie in watch_later_movies]
+        movies = Movie.objects.filter(id__in=movie_ids)
+        serializer = MovieSerializer(movies, many=True)
+        return JsonResponse({'message': 'Movie watchlist', 'watchlist': serializer.data}, safe=False)
+    return JsonResponse({'message': 'Invalid request'}, status=400)

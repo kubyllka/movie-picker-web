@@ -2,7 +2,7 @@
 from django.urls import path
 from .views import MovieView, MyTokenObtainPairSerializer
 from .views import get_random_movie
-from .views import movie_test_data, remove_from_watch_later, add_to_watch_later
+from .views import movie_test_data, remove_from_watch_later, add_to_watch_later, watchlist
 from .views import check_correct_log_in
 from .views import LoginView
 from rest_framework_simplejwt.views import (
@@ -21,6 +21,7 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('token/verify/', TokenVerifyView.as_view(), name='token_verify'),
     path('remove_from_watch_later/', remove_from_watch_later, name='remove_watchlater'),
-    path('add_to_watch_later/', add_to_watch_later, name='add_watchlater')
+    path('add_to_watch_later/', add_to_watch_later, name='add_watchlater'),
+    path('watchlist/', watchlist, name='watchlist')
 
 ]

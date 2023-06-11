@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
 import {redirect} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-const LoginModal = ({ show, handleClose, handleShow}) => {
+const LoginModal = ({ show, handleClose, handleShow, isAuthenticated, setIsAuthenticated}) => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -33,8 +33,10 @@ const LoginModal = ({ show, handleClose, handleShow}) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
+          localStorage.clear();
           localStorage.setItem("access", data.access);
           localStorage.setItem('refresh', data.refresh)
+          setIsAuthenticated(true);
           navigate("/");
           handleClose();
         } else {

@@ -42,11 +42,6 @@ class Movie(models.Model):
     def __str__(self):
         return self.title
 
-class UserInfo(models.Model):
-    nickname = models.CharField(max_length=100)
-    email = models.EmailField(max_length=200)
-    passwd = models.CharField(max_length=50)
-
 
 class WatchLaterMovie(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

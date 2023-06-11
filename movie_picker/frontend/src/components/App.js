@@ -7,6 +7,7 @@ import NavBar from "./NaviBar"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import RandomMovie from "./RandomMoviePage";
 import ResultPage from "./ResultPage"
+import ProfileUserPage from "./ProfileUserPage";
 
 const App = () => {
   return (
@@ -17,7 +18,7 @@ const App = () => {
           <Route path="/movieTest" element={<MovieTestPage />} />
           <Route path="/randomMovie" element={<RandomMovie />} />
           <Route path="/result" element={<ResultPage />} />
-          <Route path="/profile" element={<MovieTestPage />} />
+          <Route path="/profile" element={<ProfileUserPage />} />
       </Routes>
     </Router>
   );
