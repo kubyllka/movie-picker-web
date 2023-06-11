@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card, Container, Row, Col, Button } from "react-bootstrap";
+import { Card, Container, Row, Col, Button, ButtonGroup } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ResultPage = () => {
@@ -11,62 +11,8 @@ const ResultPage = () => {
   const moviesPerPage = 10;
   const containerRef = useRef(null);
   const isFirstLoad = useRef(true);
-
-
-  const containerStyles = {
-    backgroundColor: "black",
-    minHeight: "100vh",
-    overflowY: "auto",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative"
-  };
-
-  const cardStyles = {
-    backgroundColor: "#343a40",
-    color: "white",
-    width: "80%",
-    margin: "20px auto",
-    padding: "20px",
-    overflow: "hidden"
-  };
-
-  const imageStyles = {
-    width: "200px",
-    height: "300px",
-    objectFit: "cover",
-  };
-
-  const titleStyles = {
-    fontSize: "24px",
-    fontWeight: "bold",
-    marginBottom: "10px",
-  };
-
-  const overviewStyles = {
-    marginBottom: "10px",
-  };
-
-  const yearStyles = {
-    marginBottom: "10px",
-  };
-
-  const voteAverageStyles = {
-    marginBottom: "10px",
-  };
-
-  const genresStyles = {
-    marginBottom: "10px",
-  };
-
-  const keywordsStyles = {
-    marginBottom: "10px",
-  };
-
-  const trailerButtonStyles = {
-    marginLeft: "30px",
-  };
+  const [isFavorite, setIsFavorite] = useState({});
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const totalPages = Math.ceil(recommendedMovies.length / moviesPerPage);
 
@@ -94,40 +40,139 @@ const ResultPage = () => {
     }
   }, [currentPage]);
 
+  const addToWatchLater = (movie) => {
+    fetch("http://127.0.0.1:8000/api/add_to_watch_later/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('access')}`,
+      },
+      body: JSON.stringify({ movieId: movie.id }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          setIsFavorite((prevFavorites) => ({
+            ...prevFavorites,
+            [movie.id]: true,
+          }));
+        } else {
+          console.log("Failed to add movie to WatchLater");
+        }
+      })
+      .catch((error) => {
+        console.log("Error adding movie to WatchLater:", error);
+      });
+  };
+
+  const removeFromWatchLater = (movie) => {
+    fetch("http://127.0.0.1:8000/api/remove_from_watch_later/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('access')}`,
+      },
+      body: JSON.stringify({ movieId: movie.id }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          setIsFavorite((prevFavorites) => {
+            const updatedFavorites = { ...prevFavorites };
+            delete updatedFavorites[movie.id];
+            return updatedFavorites;
+          });
+        } else {
+          console.log("Failed to remove movie from WatchLater");
+        }
+      })
+      .catch((error) => {
+        console.log("Error removing movie from WatchLater:", error);
+      });
+  };
+
+  const checkFavoriteStatus = (movie) => {
+    fetch("http://127.0.0.1:8000/api/check_favorite_status/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('access')}`,
+      },
+      body: JSON.stringify({ movieId: movie.id }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Failed to check favorite status");
+        }
+      })
+      .then((data) => {
+        setIsFavorite((prevFavorites) => ({
+          ...prevFavorites,
+          [movie.id]: data.isFavorite,
+        }));
+      })
+      .catch((error) => {
+        console.log("Error checking favorite status:", error);
+      });
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('access');
+    setIsAuthenticated(!!token);
+  }, []);
+
+  useEffect(() => {
+    currentMovies.forEach((movie) => {
+      checkFavoriteStatus(movie);
+    });
+  }, [currentPage]);
+
   return (
-    <Container fluid={true} style={containerStyles} ref={containerRef}>
+    <Container fluid={true} className="containerStyles" ref={containerRef}>
       {!isLoading && recommendedMovies.length > 0 && (
         <Container fluid={true}>
           {currentMovies.map((movie) => (
-            <Card key={movie.id} style={cardStyles}>
+            <Card key={movie.id} className="cardStyles">
               <Row>
                 <Col md={3}>
-                  <Card.Img variant="top" src={movie.poster_path} alt={movie.title} style={imageStyles} />
+                  <Card.Img variant="top" src={movie.poster_path} alt={movie.title} className="imageStyles" />
                 </Col>
-                <Col md={8}>
+                <Col md={8} className="text">
                   <Card.Body>
-                    <Card.Title style={titleStyles}>{movie.title}</Card.Title>
-                    <Card.Text style={overviewStyles}>{movie.overview}</Card.Text>
-                    <Card.Text style={yearStyles}>Year: {movie.year}</Card.Text>
-                    <Card.Text style={voteAverageStyles}>Vote Average: {movie.vote_average}</Card.Text>
-                    <Card.Text style={genresStyles}>Genres: {movie.genres.join(", ")}</Card.Text>
-                    <Card.Text style={keywordsStyles}>Keywords: {movie.keywords.join(", ")}</Card.Text>
-                    <Button variant="outline-light" href={movie.trailer_link} style={trailerButtonStyles}>
-                      Trailer
-                    </Button>
+                    <Card.Title>{movie.title}</Card.Title>
+                    <Card.Text>{movie.overview}</Card.Text>
+                    <Card.Text>Year: {movie.year}</Card.Text>
+                    <Card.Text>Vote Average: {movie.vote_average}</Card.Text>
+                    <Card.Text>Genres: {movie.genres.join(", ")}</Card.Text>
+                    <Card.Text>Keywords: {movie.keywords.join(", ")}</Card.Text>
+                    <ButtonGroup>
+                      <Button variant="outline-light" href={movie.trailer_link}>
+                        Trailer
+                      </Button>
+                      {isAuthenticated && (
+                        <Button
+                          variant={isFavorite[movie.id] ? "light" : "outline-light"}
+                          onClick={() =>
+                            isFavorite[movie.id] ? removeFromWatchLater(movie) : addToWatchLater(movie)
+                          }
+                        >
+                          {isFavorite[movie.id] ? "Remove from WatchLater" : "Add to WatchLater"}
+                        </Button>
+                      )}
+                    </ButtonGroup>
                   </Card.Body>
                 </Col>
               </Row>
             </Card>
           ))}
-          <div style={{ textAlign: "center", marginTop: "20px" }}>
+          <ButtonGroup>
             <Button variant="light" onClick={handlePrevPage} disabled={currentPage === 1}>
               Previous
-            </Button>{" "}
+            </Button>
             <Button variant="light" onClick={handleNextPage} disabled={currentPage === totalPages}>
               Next
             </Button>
-          </div>
+          </ButtonGroup>
         </Container>
       )}
     </Container>

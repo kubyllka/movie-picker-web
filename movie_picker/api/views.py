@@ -194,3 +194,20 @@ def watchlist(request):
         serializer = MovieSerializer(movies, many=True)
         return JsonResponse({'message': 'Movie watchlist', 'watchlist': serializer.data}, safe=False)
     return JsonResponse({'message': 'Invalid request'}, status=400)
+
+
+@csrf_exempt
+@login_required
+def check_favorite_status(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        movie_id = data.get('movieId')
+        movie = Movie.objects.get(id=movie_id)
+        user = request.user
+
+        if WatchLaterMovie.objects.filter(user=user, movie=movie).exists():
+            return JsonResponse({'isFavorite': True})
+        else:
+            return JsonResponse({'isFavorite': False})
+
+    return JsonResponse({'message': 'Invalid request'}, status=400)

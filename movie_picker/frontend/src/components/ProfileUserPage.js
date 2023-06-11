@@ -52,7 +52,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <Container>
+    <Container fluid={true} className="containerStyles">
       <h1>Profile</h1>
       <Row>
         {watchlist.map((movie) => (

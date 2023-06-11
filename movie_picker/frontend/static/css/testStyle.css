@@ -1,0 +1,26 @@
+.redo-button {
+  margin: 20px;
+  color: rgb(230, 66, 52);
+}
+
+.testSection {
+  text-align: center;
+  display: flex;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: rgb(20, 64, 101);
+  border-radius: 50px;
+}
+
+.testSection h2 {
+  color: #ffffff;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.testSection p {
+  color: rgba(255, 255, 255, 0.91);
+  font-size: 16px;
+  line-height: 1.5;
+}

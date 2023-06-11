@@ -33,6 +33,7 @@ const NavBar = () => {
   const handleSignOut = () => {
     localStorage.clear();
     setIsAuthenticated(false);
+    navigate("/");
   };
 
   return (

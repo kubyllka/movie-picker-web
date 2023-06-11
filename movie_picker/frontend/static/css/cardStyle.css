@@ -1,0 +1,25 @@
+.cardStyles {
+  background-color: #343a40;
+  color: white;
+  width: 80%;
+  margin: 20px auto;
+  padding: 20px;
+  overflow: hidden;
+}
+
+.imageStyles {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.titleStyles {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.text {
+  margin-bottom: 10px;
+}

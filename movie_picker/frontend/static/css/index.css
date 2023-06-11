@@ -1,3 +1,6 @@
+@import url("cardStyle.css");
+@import url("testStyle.css");
+
 html,
 body {
   height: 100%;
@@ -17,3 +20,12 @@ body {
   height: 100%;
 }
 
+.containerStyles {
+  background-color: black;
+  min-height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}

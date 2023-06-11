@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Card, Container, Row, Col, Button } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import { Card, Container, Row, Col, Button, ButtonGroup } from "react-bootstrap";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRedo } from "@fortawesome/free-solid-svg-icons";
 
 const RandomMovie = () => {
   const [movie, setMovie] = useState(null);
@@ -11,17 +13,35 @@ const RandomMovie = () => {
   const fetchRandomMovie = () => {
     fetch("http://127.0.0.1:8000/api/random_movie/", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('access')}`,
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
       },
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         setMovie(data);
         setIsLoading(false);
+        checkFavoriteStatus(data.id);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error fetching random movie:", error);
         setIsLoading(false);
+      });
+  };
+
+  const checkFavoriteStatus = (movieId) => {
+    fetch("http://127.0.0.1:8000/api/check_favorite_status/", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
+      },
+      method: "POST",
+      body: JSON.stringify({ movieId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setIsFavorite(data.isFavorite);
+      })
+      .catch((error) => {
+        console.log("Error checking favorite status:", error);
       });
   };
 
@@ -29,24 +49,23 @@ const RandomMovie = () => {
     fetchRandomMovie();
   }, []);
 
-
   const addToWatchLater = () => {
     fetch("http://127.0.0.1:8000/api/add_to_watch_later/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem('access')}`,
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
       },
       body: JSON.stringify({ movieId: movie.id }),
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
           setIsFavorite(true);
         } else {
           console.log("Failed to add movie to WatchLater");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error adding movie to WatchLater:", error);
       });
   };
@@ -56,103 +75,73 @@ const RandomMovie = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem('access')}`, // Передача JWT-токена у заголовках
+        Authorization: `Bearer ${localStorage.getItem("access")}`,
       },
       body: JSON.stringify({ movieId: movie.id }),
     })
-      .then(response => {
+      .then((response) => {
         if (response.ok) {
           setIsFavorite(false);
         } else {
           console.log("Failed to remove movie from WatchLater");
         }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error removing movie from WatchLater:", error);
       });
   };
 
+  const handleRefreshMovie = () => {
+    setIsLoading(true);
+    fetchRandomMovie();
+  };
+
   useEffect(() => {
-    const token = localStorage.getItem('access');
+    const token = localStorage.getItem("access");
     setIsAuthenticated(!!token);
   }, []);
 
-  const containerStyles = {
-    backgroundColor: "black",
-    minHeight: "100vh",
-    overflowY: "auto",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "relative",
-    marginTop: "56px",
-  };
-
-  const cardStyles = {
-    backgroundColor: "#343a40",
-    color: "white",
-    width: "80%",
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    overflow: "hidden",
-  };
-
-  const imageStyles = {
-    width: "200px",
-    height: "300px",
-    objectFit: "cover",
-    float: "left",
-    marginRight: "20px",
-  };
-
-  const titleStyles = {
-    fontSize: "30px",
-    fontWeight: "bold",
-    marginBottom: "10px",
-  };
-
-  const genresStyles = {
-    marginBottom: "10px",
-  };
-
-  const keywordsStyles = {
-    marginBottom: "10px",
-  };
-
-  const trailerButtonStyles = {
-    marginRight: "10px",
-  };
-
   return (
-    <Container fluid={true} style={containerStyles}>
+    <Container fluid={true} className="containerStyles">
       {!isLoading && movie && (
-        <Container fluid={true}>
-          <Card style={cardStyles}>
-            <Card.Body>
-              <Row>
-                <Col md={3}>
-                  <img src={movie.poster_path} alt={movie.title} style={imageStyles} />
-                </Col>
-                <Col md={8}>
-                  <Card.Title style={titleStyles}>{movie.title}</Card.Title>
+        <Container fluid>
+          <Card className="cardStyles">
+            <Row>
+              <Col md={3}>
+                <Card.Img
+                  variant="top"
+                  src={movie.poster_path}
+                  alt={movie.title}
+                  className="imageStyles"
+                />
+                <Button variant="light" onClick={handleRefreshMovie} className="redo-button" >
+                  <FontAwesomeIcon icon={faRedo} />
+                </Button>
+              </Col>
+              <Col md={7}>
+                <Card.Body className="text">
+                  <Card.Title>{movie.title}</Card.Title>
                   <Card.Text>{movie.overview}</Card.Text>
                   <Card.Text>Year: {movie.year}</Card.Text>
                   <Card.Text>Vote Average: {movie.vote_average}</Card.Text>
-                  <Card.Text style={genresStyles}>Genres: {movie.genres.join(", ")}</Card.Text>
-                  <Card.Text style={keywordsStyles}>Keywords: {movie.keywords.join(", ")}</Card.Text>
-                  <Button variant="outline-light" href={movie.trailer_link} style={trailerButtonStyles}>
-                    Trailer
-                  </Button>
-                  {isAuthenticated && (
-                    <Button variant="outline-light" onClick={isFavorite ? removeFromWatchLater : addToWatchLater}>
-                      {isFavorite ? "Remove from WatchLater" : "Add to WatchLater"}
+                  <Card.Text>Genres: {movie.genres.join(", ")}</Card.Text>
+                  <Card.Text>Keywords: {movie.keywords.join(", ")}</Card.Text>
+                  <ButtonGroup>
+                    <Button variant="outline-light" href={movie.trailer_link}>
+                      Trailer
                     </Button>
-                  )}
-                </Col>
-              </Row>
-            </Card.Body>
+                    {isAuthenticated && (
+                      <Button
+                        variant={isFavorite ? "light" : "outline-light"}
+                        onClick={isFavorite ? removeFromWatchLater : addToWatchLater}
+                      >
+                        {isFavorite ? "Remove from WatchLater" : "Add to WatchLater"}
+                      </Button>
+                    )}
+                  </ButtonGroup>
+                </Card.Body>
+              </Col>
+            </Row>
           </Card>
         </Container>
       )}
