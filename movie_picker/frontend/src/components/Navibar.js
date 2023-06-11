@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { Navbar, Nav, Button, Container } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Navbar, Nav, Button } from "react-bootstrap";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../static/images/logo.png";
 import LoginModal from "./LoginModal";
 
 const NavBar = () => {
-
   const [show, setShow] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
   const handleShow = () => {
     setShow(true);
@@ -16,6 +17,24 @@ const NavBar = () => {
     setShow(false);
   };
 
+  useEffect(() => {
+    const handleTokenChange = () => {
+      const token = localStorage.getItem("access");
+      setIsAuthenticated(!!token);
+    };
+
+    handleTokenChange();
+
+    window.addEventListener("storage", handleTokenChange);
+
+    return () => {
+      window.removeEventListener("storage", handleTokenChange);
+    };
+  }, []);
+
+  const handleProfile = () => {
+    navigate("/profile"); // Замініть "/profile" на шлях до сторінки профілю
+  };
 
   return (
     <>
@@ -38,16 +57,24 @@ const NavBar = () => {
             </Nav.Link>
           </Nav>
           <Nav>
-            <Button variant="primary" className="mr-2" onClick={handleShowModal}>
-              Log In
-            </Button>
-            <Button variant="primary">
-              Sign out
-            </Button>
+            {!isAuthenticated ? (
+              <Button variant="primary" className="mr-2" onClick={handleShow}>
+                Log In
+              </Button>
+            ) : (
+              <>
+                <Button variant="primary" className="mr-2" onClick={handleProfile}>
+                  Profile
+                </Button>
+                <Nav.Link as={Link} to="/signout" style={{ marginLeft: "10px" }} className="nav-link">
+                  Sign out
+                </Nav.Link>
+              </>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
-      <LoginModal show={showModal} handleClose={handleCloseModal} handleShow={handleShowModal} />
+      <LoginModal show={show} handleClose={handleClose} handleShow={handleShow} />
     </>
   );
 };

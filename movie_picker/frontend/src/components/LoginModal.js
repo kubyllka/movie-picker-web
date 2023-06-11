@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
-
-const LoginModal = ({ show, handleClose, handleShow }) => {
+import {redirect} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+const LoginModal = ({ show, handleClose, handleShow}) => {
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -9,7 +10,9 @@ const LoginModal = ({ show, handleClose, handleShow }) => {
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
+   const navigate  = useNavigate();
   const handleLogin = () => {
+
     if (!username || !password) {
       setErrorMessage("Please enter username and password.");
       setUsernameError(!username);
@@ -30,7 +33,9 @@ const LoginModal = ({ show, handleClose, handleShow }) => {
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
-          localStorage.setItem("token", data.access);
+          localStorage.setItem("access", data.access);
+          localStorage.setItem('refresh', data.refresh)
+          navigate("/");
           handleClose();
         } else {
           setErrorMessage("Invalid username or password. Please try again.");

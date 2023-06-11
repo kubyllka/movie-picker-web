@@ -11,7 +11,7 @@ const RandomMovie = () => {
   const fetchRandomMovie = () => {
     fetch("http://127.0.0.1:8000/api/random_movie/", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Передача JWT-токена у заголовках
+        Authorization: `Bearer ${localStorage.getItem('access')}`,
       },
     })
       .then(response => response.json())
@@ -29,12 +29,13 @@ const RandomMovie = () => {
     fetchRandomMovie();
   }, []);
 
+
   const addToWatchLater = () => {
     fetch("http://127.0.0.1:8000/api/add_to_watch_later/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Передача JWT-токена у заголовках
+        Authorization: `Bearer ${localStorage.getItem('access')}`,
       },
       body: JSON.stringify({ movieId: movie.id }),
     })
@@ -55,7 +56,7 @@ const RandomMovie = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Передача JWT-токена у заголовках
+        Authorization: `Bearer ${localStorage.getItem('access')}`, // Передача JWT-токена у заголовках
       },
       body: JSON.stringify({ movieId: movie.id }),
     })
@@ -72,8 +73,7 @@ const RandomMovie = () => {
   };
 
   useEffect(() => {
-    // Перевірка, чи користувач авторизований
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('access');
     setIsAuthenticated(!!token);
   }, []);
 

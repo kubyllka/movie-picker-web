@@ -7,10 +7,15 @@ const RandomMovie = () => {
   const [movies, setMovies] = useState([]);
   const [selectedMovies, setSelectedMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isFavorite, setIsFavorite] = useState({});
 
   const navigate  = useNavigate();
   const fetchRandomMovies = () => {
-    fetch("http://127.0.0.1:8000/api/test/")
+    fetch("http://127.0.0.1:8000/api/test/", {
+        headers: {
+      },
+    })
       .then((response) => response.json())
       .then((data) => {
         setMovies(data);
@@ -25,6 +30,62 @@ const RandomMovie = () => {
   useEffect(() => {
     fetchRandomMovies();
   }, []);
+
+
+  const addToWatchLater = (movie) => {
+    fetch("http://127.0.0.1:8000/api/add_to_watch_later/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('access')}`, // Передача JWT-токена у заголовках
+      },
+      body: JSON.stringify({ movieId: movie.id }),
+    })
+      .then(response => {
+        if (response.ok) {
+            setIsFavorite((prevFavorites) => ({
+            ...prevFavorites,
+            [movie.id]: true,
+          }));
+        } else {
+          console.log("Failed to add movie to WatchLater");
+        }
+      })
+      .catch(error => {
+        console.log("Error adding movie to WatchLater:", error);
+      });
+  };
+
+  const removeFromWatchLater = (movie) => {
+    fetch("http://127.0.0.1:8000/api/remove_from_watch_later/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem('access')}`, // Передача JWT-токена у заголовках
+      },
+      body: JSON.stringify({ movieId: movie.id }),
+    })
+      .then(response => {
+        if (response.ok) {
+           setIsFavorite((prevFavorites) => {
+            const updatedFavorites = { ...prevFavorites };
+            delete updatedFavorites[movie.id];
+            return updatedFavorites;
+          });
+        } else {
+          console.log("Failed to remove movie from WatchLater");
+        }
+      })
+      .catch(error => {
+        console.log("Error removing movie from WatchLater:", error);
+      });
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem('access');
+    setIsAuthenticated(!!token);
+  }, []);
+
 
   const handleMovieSelect = (movie) => {
     const isSelected = selectedMovies.includes(movie);
@@ -137,6 +198,14 @@ const RandomMovie = () => {
                     <Button variant="outline-light" href={movie.trailer_link} style={trailerButtonStyles}>
                     Trailer
                   </Button>
+                      {isAuthenticated && (
+                      <Button
+                        variant="outline-light"
+                        onClick={() => (isFavorite[movie.id] ? removeFromWatchLater(movie) : addToWatchLater(movie))}
+                      >
+                        {isFavorite[movie.id] ? "Remove from WatchLater" : "Add to WatchLater"}
+                      </Button>
+                    )}
                   </Card.Body>
                 </Col>
               </Row>
