@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import Col from 'react-bootstrap/Col';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import Row from 'react-bootstrap/Row';
-import Container from 'react-bootstrap/Container';
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from 'react-router-dom';
+import { Container, Card, Form, Button, Col, Row, InputGroup, Modal} from 'react-bootstrap';
+import validator from 'validator';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-function FormExample() {
+function RegisterPage() {
+  const [errorMessage, setErrorMessage] = useState('');
   const [validated, setValidated] = useState(false);
+  const navigate = useNavigate();
+  const [showModal, setShowModal] = useState(false);
+
   const [formData, setFormData] = useState({
     email: '',
     first_name: '',
@@ -20,36 +20,64 @@ function FormExample() {
     agree: false,
   });
 
-  const handleSubmit = (event) => {
+    const handleSubmit = (event) => {
     event.preventDefault();
+    event.stopPropagation();
 
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-    } else {
-      if (formData.password !== formData.confirm_password) {
-        return; // Don't submit the form if passwords don't match
-      }
-
-      fetch('http://127.0.0.1:8000/api/register/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data);
+    if (form.checkValidity()) {
+      if (formData.password === formData.confirm_password) {
+        fetch('http://127.0.0.1:8000/api/register/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
         })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              console.log(data.message);
+              setFormData({
+                email: '',
+                first_name: '',
+                last_name: '',
+                username: '',
+                password: '',
+                confirm_password: '',
+                agree: false,
+              });
+              setErrorMessage('');
+              navigate('/');
+            } else {
+              setFormData({
+                email: '',
+                first_name: '',
+                last_name: '',
+                username: '',
+                password: '',
+                confirm_password: '',
+                agree: false,
+              });
+              console.log(data);
+              setErrorMessage(Object.values(data.message).join('\n'));
+              setShowModal(true);
+              setValidated(true);
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      }
     }
+
 
     setValidated(true);
   };
 
+    const closeModal = () => {
+    setShowModal(false);
+  };
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
     const fieldValue = type === 'checkbox' ? checked : value;
@@ -60,8 +88,12 @@ function FormExample() {
     }));
   };
 
+  const isEmailValid = (email) => {
+    return validator.isEmail(email);
+  };
+
   return (
-    <Container fluid={true} className="containerStyles">
+    <Container fluid className="containerStyles">
       <Card bg="dark" text="light" className="p-4">
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group as={Row} className="mb-3">
@@ -77,7 +109,7 @@ function FormExample() {
                 onChange={handleChange}
                 required
               />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
             </Col>
           </Form.Group>
 
@@ -94,7 +126,7 @@ function FormExample() {
                 onChange={handleChange}
                 required
               />
-              <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
+              <Form.Control.Feedback type="valid">Looks good!</Form.Control.Feedback>
             </Col>
           </Form.Group>
 
@@ -114,9 +146,7 @@ function FormExample() {
                   onChange={handleChange}
                   required
                 />
-                <Form.Control.Feedback type="invalid">
-                  Please choose a username.
-                </Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid">Please choose a username.</Form.Control.Feedback>
               </InputGroup>
             </Col>
           </Form.Group>
@@ -133,10 +163,9 @@ function FormExample() {
                 value={formData.email}
                 onChange={handleChange}
                 required
+                isInvalid={!isEmailValid(formData.email)}
               />
-              <Form.Control.Feedback type="invalid">
-                Please provide a valid email.
-              </Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">Please provide a valid email.</Form.Control.Feedback>
             </Col>
           </Form.Group>
 
@@ -153,9 +182,7 @@ function FormExample() {
                 onChange={handleChange}
                 required
               />
-              <Form.Control.Feedback type="invalid">
-                Please provide a password.
-              </Form.Control.Feedback>
+              <Form.Control.Feedback type="invalid">Please provide a password.</Form.Control.Feedback>
             </Col>
           </Form.Group>
 
@@ -171,7 +198,7 @@ function FormExample() {
                 value={formData.confirm_password}
                 onChange={handleChange}
                 required
-                className={formData.password !== formData.confirm_password ? 'is-invalid' : ''}
+                isInvalid={formData.password !== formData.confirm_password}
               />
               <Form.Control.Feedback type="invalid">
                 {formData.password !== formData.confirm_password && 'Passwords do not match.'}
@@ -199,8 +226,19 @@ function FormExample() {
           </Form.Group>
         </Form>
       </Card>
+      <Modal show={showModal} onHide={closeModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Error</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{errorMessage}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeModal}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 }
 
-export default FormExample;
+export default RegisterPage;

@@ -174,5 +174,5 @@ class RegistrationView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({'message': 'User registered successfully.'})
-        return Response(serializer.errors, status=400)
+            return JsonResponse({'message': 'User registered successfully.', 'success': True})
+        return JsonResponse({'message' : serializer.errors, 'success' : False})
