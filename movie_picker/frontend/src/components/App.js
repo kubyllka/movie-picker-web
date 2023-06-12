@@ -1,14 +1,17 @@
 import React from "react";
 import { render } from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
+
 import HomePage from "./HomePage"
 import MovieTestPage from "./MovieTestPage";
 import NavBar from "./NaviBar"
-import 'bootstrap/dist/css/bootstrap.min.css';
 import RandomMovie from "./RandomMoviePage";
 import ResultPage from "./ResultPage"
 import ProfileUserPage from "./ProfileUserPage";
 import RegisterPage from "./RegisterPage";
+import Footer from "./Footer";
 
 const App = () => {
   return (
@@ -22,6 +25,7 @@ const App = () => {
           <Route path="/profile" element={<ProfileUserPage />} />
           <Route path="/register" element={<RegisterPage />}/>
       </Routes>
+        <Footer/>
     </Router>
   );
 };

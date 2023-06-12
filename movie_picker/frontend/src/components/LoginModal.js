@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Form, Button } from "react-bootstrap";
+import { Modal, Form, Button, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 const LoginModal = ({
@@ -55,16 +55,19 @@ const LoginModal = ({
       });
   };
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
+  const changeErrorStatus = ()=>{
+    setErrorMessage("");
     setUsernameError(false);
     setPasswordError(false);
+  }
+  const handleUsernameChange = (event) => {
+    setUsername(event.target.value);
+    changeErrorStatus();
   };
 
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
-    setPasswordError(false);
-    setUsernameError(false);
+    changeErrorStatus();
   };
 
   const handleRegisterClick = () => {
@@ -73,12 +76,12 @@ const LoginModal = ({
   };
 
   return (
-    <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
+    <Modal show={show} onHide={handleClose} >
+      <Modal.Header closeButton className='blackStyle'>
         <Modal.Title>Log in</Modal.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Form>
+      <Modal.Body className='blackStyle'>
+        <Form >
           <Form.Group controlId="formBasicUsername">
             <Form.Label>Username</Form.Label>
             <Form.Control
@@ -99,18 +102,21 @@ const LoginModal = ({
               className={passwordError ? "is-invalid" : ""}
             />
           </Form.Group>
-          <Button variant="primary" onClick={handleLogin}>
-            Log in
-          </Button>
-          <h6>{errorMessage}</h6>
-          <p>
-            Don't have an account?{" "}
-            <Button variant="link" onClick={handleRegisterClick}>
-              Register
+
+          <Button variant="primary" style={{'margin-top': '20px'}} onClick={handleLogin}>
+              Log in
             </Button>
-          </p>
+            <h6>{errorMessage}</h6>
+            <p>
+              Don't have an account?
+              <Button variant="link" onClick={handleRegisterClick}>
+                Register
+              </Button>
+            </p>
         </Form>
       </Modal.Body>
+      <Modal.Footer className="blackStyle">
+      </Modal.Footer>
     </Modal>
   );
 };

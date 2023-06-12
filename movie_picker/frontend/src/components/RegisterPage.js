@@ -48,6 +48,7 @@ function RegisterPage() {
                 agree: false,
               });
               setMessage('Your registration is successful! Try to log in now!');
+              setValidated(false);
               setShowModal(true);
             } else {
               setFormData({
@@ -61,8 +62,8 @@ function RegisterPage() {
               });
               console.log(data);
               setMessage(Object.values(data.message).join('\n'));
+              setValidated(false);
               setShowModal(true);
-              setValidated(true);
             }
           })
           .catch((error) => {
@@ -77,7 +78,6 @@ function RegisterPage() {
 
     const closeModal = () => {
     setShowModal(false);
-    setValidated(false);
   };
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -228,11 +228,11 @@ function RegisterPage() {
         </Form>
       </Card>
       <Modal show={showModal} onHide={closeModal}>
-        <Modal.Header closeButton>
+        <Modal.Header closeButton className="blackStyle">
           <Modal.Title>Message</Modal.Title>
         </Modal.Header>
-        <Modal.Body>{errorMessage}</Modal.Body>
-        <Modal.Footer>
+        <Modal.Body className="blackStyle">{errorMessage}</Modal.Body>
+        <Modal.Footer className="blackStyle">
           <Button variant="secondary" onClick={closeModal}>
             Close
           </Button>

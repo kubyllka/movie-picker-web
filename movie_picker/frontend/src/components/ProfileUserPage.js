@@ -37,7 +37,6 @@ const ProfilePage = () => {
         console.error("Error fetching watchlist:", error);
       }
     };
-
     fetchWatchlist();
   }, []);
 
@@ -69,7 +68,7 @@ const ProfilePage = () => {
           </Col>
         </Row>
         {watchlist.map((movie) => (
-          <Col key={movie.id} sm={6} md={4} lg={3} xl={2}>
+          <Col key={movie.id}>
             <Card className="cardStylesList">
               <Card.Img variant="top" src={movie.poster_path} />
               <Card.Body>
@@ -77,7 +76,6 @@ const ProfilePage = () => {
                   <Button
                     variant="outline-info"
                     onClick={() => handleShowDetails(movie)}
-                    className="mr-2"
                   >
                     View Details
                   </Button>

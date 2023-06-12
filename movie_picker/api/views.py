@@ -12,7 +12,7 @@ from .serializers import MovieSerializer, UserSerializer
 from .movie_recommendation_model import MovieRecommendationModel
 import logging
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -157,10 +157,6 @@ def check_favorite_status(request):
     return JsonResponse({'message': 'Invalid request'}, status=400)
 
 
-@csrf_exempt
-@login_required
-def get_user_info(request):
-    pass
 
 
 class RegistrationView(APIView):
@@ -181,3 +177,7 @@ class RegistrationView(APIView):
                 })
             return Response({'message': 'User registered successfully.', 'success': True})
         return Response({'message': serializer.errors, 'success': False})
+
+@login_required
+def logout_view(request):
+    logout(request.user)

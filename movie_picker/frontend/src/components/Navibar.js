@@ -33,6 +33,16 @@ const NavBar = () => {
   const handleSignOut = () => {
     localStorage.clear();
     setIsAuthenticated(false);
+    fetch("http://127.0.0.1:8000/api/logout/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    })
     navigate("/");
   };
 
@@ -64,15 +74,13 @@ const NavBar = () => {
               ) : (
                   <ButtonGroup>
                   <Button variant="outline-light" className="mr-3" onClick={handleProfile}>
-                    Profile
+                    Watchlist
                   </Button>
                   <Button variant="outline-danger" className="mr-3" onClick={handleSignOut}>
                     Sign out
                   </Button>
                     </ButtonGroup>
               )}
-
-
           </Navbar.Collapse>
         </Container>
       </Navbar>

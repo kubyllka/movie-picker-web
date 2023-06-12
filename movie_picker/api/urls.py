@@ -1,6 +1,6 @@
 from django.urls import path
 from .views import get_random_movie
-from .views import movie_test_data, remove_from_watch_later, add_to_watch_later, watchlist, check_favorite_status, RegistrationView
+from .views import movie_test_data, remove_from_watch_later, add_to_watch_later, watchlist, check_favorite_status, RegistrationView, logout_view
 from .views import LoginView
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -20,6 +20,7 @@ urlpatterns = [
     path('add_to_watch_later/', add_to_watch_later, name='add_watchlater'),
     path('watchlist/', watchlist, name='watchlist'),
     path('check_favorite_status/', check_favorite_status, name='check_favorite_status'),
-    path('register/', RegistrationView.as_view(), name='registration')
+    path('register/', RegistrationView.as_view(), name='registration'),
+    path('logout/', logout_view, name='logout'),
 
 ]

@@ -165,11 +165,12 @@ const ResultPage = () => {
               </Row>
             </Card>
           ))}
-          <ButtonGroup>
-            <Button variant="light" onClick={handlePrevPage} disabled={currentPage === 1}>
+
+          <ButtonGroup className="d-block text-center"  >
+            <Button variant="light" size="sm" onClick={handlePrevPage} disabled={currentPage === 1} >
               Previous
             </Button>
-            <Button variant="light" onClick={handleNextPage} disabled={currentPage === totalPages}>
+            <Button variant="light" size="sm"  onClick={handleNextPage} disabled={currentPage === totalPages} >
               Next
             </Button>
           </ButtonGroup>
