@@ -127,7 +127,7 @@ const RandomMovie = () => {
                   <Card.Text>Genres: {movie.genres.join(", ")}</Card.Text>
                   <Card.Text>Keywords: {movie.keywords.join(", ")}</Card.Text>
                   <ButtonGroup>
-                    <Button variant="outline-light" href={movie.trailer_link}>
+                    <Button variant="outline-info" href={movie.trailer_link}>
                       Trailer
                     </Button>
                     {isAuthenticated && (

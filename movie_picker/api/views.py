@@ -1,7 +1,5 @@
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.utils import json
 from django.db.models import Max
@@ -10,56 +8,18 @@ from django.http import JsonResponse
 from random import randint
 from .models import Movie, WatchLaterMovie
 import json
-from .serializers import MovieSerializer
+from .serializers import MovieSerializer, UserSerializer
 from .movie_recommendation_model import MovieRecommendationModel
 import logging
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.views import TokenObtainPairView
+
 
 
 logger = logging.getLogger(__name__)
-
 # Create your views here.
-class MovieView(generics.ListAPIView):
-    pass
-   # queryset = MovieInfo.objects.all()
-    #serializer_class = MovieSerializer
-
-
-class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-    @classmethod
-    def get_token(cls, user):
-        token = super().get_token(user)
-
-        # Add custom claims
-        token['username'] = user.username
-        # ...
-
-        return token
-
-
-class TestSubmitView(APIView):
-    def post(self, request):
-        try:
-            data = request.session.data
-            answers =  data.get('answers')
-            tags = data.get('tags')
-
-            response_data = {
-                'message': tags
-            }
-            return JsonResponse(response_data)
-        except json.JSONDecodeError:
-            response_data = {
-                'error': 'Invalid JSON payload',
-            }
-            return JsonResponse(response_data, status=400)
-
-
 def get_random_movie(request):
     max_id = Movie.objects.aggregate(max_id=Max("id"))["max_id"]
     while True:
@@ -114,16 +74,6 @@ def check_correct_log_in(request):
             return JsonResponse({"success": False})
     else:
         return JsonResponse({"success": False})
-
-
-from django.contrib.auth import authenticate, login
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework_simplejwt.tokens import RefreshToken
-
-
-from rest_framework_simplejwt.tokens import RefreshToken
-
 
 class LoginView(APIView):
     def post(self, request):
@@ -211,3 +161,18 @@ def check_favorite_status(request):
             return JsonResponse({'isFavorite': False})
 
     return JsonResponse({'message': 'Invalid request'}, status=400)
+
+
+@csrf_exempt
+@login_required
+def get_user_info(request):
+    pass
+
+
+class RegistrationView(APIView):
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'message': 'User registered successfully.'})
+        return Response(serializer.errors, status=400)

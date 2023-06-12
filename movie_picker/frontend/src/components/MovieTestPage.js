@@ -198,7 +198,7 @@ const RandomMovie = () => {
                       >
                         {selectedMovies.includes(movie) ? "Selected" : "Select"}
                       </Button>
-                      <Button variant="outline-light" href={movie.trailer_link}>
+                      <Button variant="outline-info" href={movie.trailer_link}>
                         Trailer
                       </Button>
                       {isAuthenticated && (
@@ -223,7 +223,7 @@ const RandomMovie = () => {
           ))}
           <div className="text-center mt-4">
             <Button
-              variant="success"
+              variant="outline-success"
               onClick={handleFinishTest}
               disabled={isFinishButtonDisabled}
             >

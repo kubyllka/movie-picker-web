@@ -1,18 +1,23 @@
 import React, { useState } from "react";
 import { Modal, Form, Button } from "react-bootstrap";
-import {redirect} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-const LoginModal = ({ show, handleClose, handleShow, isAuthenticated, setIsAuthenticated}) => {
 
+const LoginModal = ({
+  show,
+  handleClose,
+  handleShow,
+  isAuthenticated,
+  setIsAuthenticated,
+}) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [usernameError, setUsernameError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
-   const navigate  = useNavigate();
-  const handleLogin = () => {
+  const navigate = useNavigate();
 
+  const handleLogin = () => {
     if (!username || !password) {
       setErrorMessage("Please enter username and password.");
       setUsernameError(!username);
@@ -35,7 +40,7 @@ const LoginModal = ({ show, handleClose, handleShow, isAuthenticated, setIsAuthe
         if (data.success) {
           localStorage.clear();
           localStorage.setItem("access", data.access);
-          localStorage.setItem('refresh', data.refresh)
+          localStorage.setItem("refresh", data.refresh);
           setIsAuthenticated(true);
           navigate("/");
           handleClose();
@@ -60,6 +65,11 @@ const LoginModal = ({ show, handleClose, handleShow, isAuthenticated, setIsAuthe
     setPassword(event.target.value);
     setPasswordError(false);
     setUsernameError(false);
+  };
+
+  const handleRegisterClick = () => {
+    navigate("/register");
+    handleClose();
   };
 
   return (
@@ -93,6 +103,12 @@ const LoginModal = ({ show, handleClose, handleShow, isAuthenticated, setIsAuthe
             Log in
           </Button>
           <h6>{errorMessage}</h6>
+          <p>
+            Don't have an account?{" "}
+            <Button variant="link" onClick={handleRegisterClick}>
+              Register
+            </Button>
+          </p>
         </Form>
       </Modal.Body>
     </Modal>

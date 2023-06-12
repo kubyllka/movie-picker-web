@@ -1,0 +1,11 @@
+.cardStylesList {
+  background-color: #343a40;
+  color: white;
+  overflow: hidden;
+  margin-top: 20px;
+}
+
+.imageStylesList {
+  object-fit: cover;
+  border-radius: 20px;
+}

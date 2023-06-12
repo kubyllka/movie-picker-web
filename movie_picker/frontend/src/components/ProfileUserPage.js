@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row, Col, Card, Button, ButtonGroup } from "react-bootstrap";
+import MovieDetailModal from "./MovieInfoModal";
 
 const ProfilePage = () => {
   const [watchlist, setWatchlist] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleShowDetails = (movie) => {
+    setSelectedMovie(movie);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedMovie(null);
+    setShowModal(false);
+  };
 
   useEffect(() => {
     const fetchWatchlist = async () => {
@@ -47,31 +60,45 @@ const ProfilePage = () => {
     }
   };
 
-  if (watchlist === undefined || watchlist.length === 0) {
-    return <div>No movies in watchlist</div>;
-  }
-
   return (
     <Container fluid={true} className="containerStyles">
-      <h1>Profile</h1>
       <Row>
+        <Row className="testSection">
+          <Col>
+            <h2>YOUR WATCHLIST</h2>
+          </Col>
+        </Row>
         {watchlist.map((movie) => (
           <Col key={movie.id} sm={6} md={4} lg={3} xl={2}>
-            <Card className="mb-3">
+            <Card className="cardStylesList">
               <Card.Img variant="top" src={movie.poster_path} />
               <Card.Body>
-                <Card.Title>{movie.title}</Card.Title>
-                <Button variant="primary" href={`/movies/${movie.id}`} className="mr-2">
-                  View Details
-                </Button>
-                <Button variant="danger" onClick={() => removeFromWatchlist(movie.id)}>
-                  Remove from Watchlist
-                </Button>
+                <ButtonGroup>
+                  <Button
+                    variant="outline-info"
+                    onClick={() => handleShowDetails(movie)}
+                    className="mr-2"
+                  >
+                    View Details
+                  </Button>
+                  <Button
+                    variant="outline-light"
+                    onClick={() => removeFromWatchlist(movie.id)}
+                  >
+                    Remove from Watchlist
+                  </Button>
+                </ButtonGroup>
               </Card.Body>
             </Card>
           </Col>
         ))}
       </Row>
+      {selectedMovie && (
+        <MovieDetailModal
+          movie={selectedMovie}
+          handleClose={handleCloseModal}
+        />
+      )}
     </Container>
   );
 };

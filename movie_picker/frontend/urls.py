@@ -23,6 +23,7 @@ urlpatterns = [
     path('movieTest', index),
     path('randomMovie', index),
     path('result', index),
-    path('profile', index)
+    path('profile', index),
+    path('register', index)
 ]
 
