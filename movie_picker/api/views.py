@@ -100,14 +100,10 @@ def add_to_watch_later(request):
         movie_id = data.get( 'movieId' )
         movie = Movie.objects.get( id=movie_id )
         user = request.user
-
         if WatchLaterMovie.objects.filter(user=user, movie=movie).exists():
             return JsonResponse({'message': 'Movie is already in WatchLater'}, status=400)
-
         WatchLaterMovie.objects.create(user=user, movie=movie)
-
         return JsonResponse({'message': 'Movie added to WatchLater'}, status=201)
-
     return JsonResponse({'message': 'Invalid request'}, status=400)
 
 
@@ -119,7 +115,6 @@ def remove_from_watch_later(request):
         movie_id = data.get( 'movieId' )
         movie = Movie.objects.get( id=movie_id )
         user = request.user
-
         watch_later_movie = WatchLaterMovie.objects.filter(user=user, movie=movie).first()
         if not watch_later_movie:
             return JsonResponse({'message': 'Movie is not in WatchLater'}, status=400)
@@ -154,7 +149,6 @@ def check_favorite_status(request):
         movie_id = data.get('movieId')
         movie = Movie.objects.get(id=movie_id)
         user = request.user
-
         if WatchLaterMovie.objects.filter(user=user, movie=movie).exists():
             return JsonResponse({'isFavorite': True})
         else:
@@ -171,8 +165,19 @@ def get_user_info(request):
 
 class RegistrationView(APIView):
     def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse({'message': 'User registered successfully.', 'success': True})
-        return JsonResponse({'message' : serializer.errors, 'success' : False})
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    'refresh': str(refresh),
+                    'access': str(refresh.access_token),
+                    'success': True
+                })
+            return Response({'message': 'User registered successfully.', 'success': True})
+        return Response({'message': serializer.errors, 'success': False})

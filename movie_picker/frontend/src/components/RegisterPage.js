@@ -5,7 +5,7 @@ import validator from 'validator';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function RegisterPage() {
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setMessage] = useState('');
   const [validated, setValidated] = useState(false);
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -47,8 +47,8 @@ function RegisterPage() {
                 confirm_password: '',
                 agree: false,
               });
-              setErrorMessage('');
-              navigate('/');
+              setMessage('Your registration is successful! Try to log in now!');
+              setShowModal(true);
             } else {
               setFormData({
                 email: '',
@@ -60,7 +60,7 @@ function RegisterPage() {
                 agree: false,
               });
               console.log(data);
-              setErrorMessage(Object.values(data.message).join('\n'));
+              setMessage(Object.values(data.message).join('\n'));
               setShowModal(true);
               setValidated(true);
             }
@@ -77,6 +77,7 @@ function RegisterPage() {
 
     const closeModal = () => {
     setShowModal(false);
+    setValidated(false);
   };
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
@@ -228,7 +229,7 @@ function RegisterPage() {
       </Card>
       <Modal show={showModal} onHide={closeModal}>
         <Modal.Header closeButton>
-          <Modal.Title>Error</Modal.Title>
+          <Modal.Title>Message</Modal.Title>
         </Modal.Header>
         <Modal.Body>{errorMessage}</Modal.Body>
         <Modal.Footer>
