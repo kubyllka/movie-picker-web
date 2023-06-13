@@ -1,6 +1,7 @@
 @import url("cardStyle.css");
 @import url("testStyle.css");
 @import url("watchListCardStyle.css");
+@import url("footer.css");
 
 html,
 body {
@@ -29,4 +30,15 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
+
+}
+
+.blackStyle {
+  background-color: #343a40;
+  color: white;
+  overflow: hidden;
+}
+
+.text {
+  margin-bottom: 10px;
 }

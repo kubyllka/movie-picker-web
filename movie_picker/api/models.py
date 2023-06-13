@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 class Genre(models.Model):
     tmdb_id = models.IntegerField()
     genre = models.CharField(max_length=100)

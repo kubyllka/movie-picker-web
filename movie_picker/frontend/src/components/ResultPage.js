@@ -89,6 +89,7 @@ const ResultPage = () => {
       });
   };
 
+
   const checkFavoriteStatus = (movie) => {
     fetch("http://127.0.0.1:8000/api/check_favorite_status/", {
       method: "POST",
