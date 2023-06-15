@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card, Container, Row, Col, Button, ButtonGroup } from "react-bootstrap";
+import {
+  Card,
+  Container,
+  Row,
+  Col,
+  Button,
+  ButtonGroup } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRedo } from "@fortawesome/free-solid-svg-icons";
 
@@ -13,14 +19,13 @@ const RandomMovie = () => {
   const fetchRandomMovie = () => {
     fetch("http://127.0.0.1:8000/api/random_movie/", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("access")}`,
+        "Content-Type": "application/json",
       },
     })
       .then((response) => response.json())
       .then((data) => {
         setMovie(data);
         setIsLoading(false);
-        checkFavoriteStatus(data.id);
       })
       .catch((error) => {
         console.log("Error fetching random movie:", error);
@@ -31,6 +36,7 @@ const RandomMovie = () => {
   const checkFavoriteStatus = (movieId) => {
     fetch("http://127.0.0.1:8000/api/check_favorite_status/", {
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("access")}`,
       },
       method: "POST",
@@ -47,6 +53,12 @@ const RandomMovie = () => {
 
   useEffect(() => {
     fetchRandomMovie();
+  }, []);
+
+  useEffect(()=>{
+    if(isAuthenticated){
+      checkFavoriteStatus(data.id);
+    }
   }, []);
 
   const addToWatchLater = () => {

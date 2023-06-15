@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Navbar,
-          Nav,
-          Button,
-          ButtonGroup,
-          Container } from "react-bootstrap";
+import {
+  Navbar,
+  Nav,
+  Button,
+  ButtonGroup,
+  Container
+} from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../../static/images/logo.png";
 import LoginModal from "./LoginModal";
@@ -30,21 +32,20 @@ const NavBar = () => {
     navigate("/profile");
   };
 
-  const handleSignOut = () => {
+const handleSignOut = async () => {
+  try {
+
+    await fetch("http://127.0.0.1:8000/api/logout/", {
+      method: "POST",
+      credentials: "include"
+    });
     localStorage.clear();
     setIsAuthenticated(false);
-    fetch("http://127.0.0.1:8000/api/logout/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    })
     navigate("/");
-  };
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   return (
     <>

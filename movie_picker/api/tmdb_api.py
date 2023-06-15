@@ -1,8 +1,9 @@
 import requests
-from .models import Movie
-from .models import Keyword
-from .models import Genre
-
+from .models import (
+    Movie,
+    Keyword,
+    Genre
+)
 # API-key TMDB.com
 api_key = "fe8f0ac0a3d28301a5a540414d3052a2"
 

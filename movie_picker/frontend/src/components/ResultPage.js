@@ -1,6 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Card, Container, Row, Col, Button, ButtonGroup } from "react-bootstrap";
+import {
+  Card,
+  Container,
+  Row,
+  Col,
+  Button,
+  ButtonGroup } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ResultPage = () => {
@@ -123,9 +129,11 @@ const ResultPage = () => {
   }, []);
 
   useEffect(() => {
-    currentMovies.forEach((movie) => {
+    if(isAuthenticated){
+      currentMovies.forEach((movie) => {
       checkFavoriteStatus(movie);
     });
+    }
   }, [currentPage]);
 
   return (

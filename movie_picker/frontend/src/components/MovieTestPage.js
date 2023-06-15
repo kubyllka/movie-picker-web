@@ -113,10 +113,12 @@ const RandomMovie = () => {
   }, []);
 
   useEffect(() => {
-    movies.forEach((movie) => {
-      checkFavoriteStatus(movie);
-    });
-  }, [movies]);
+    if(isAuthenticated){
+      movies.forEach((movie) => {
+        checkFavoriteStatus(movie);
+      });
+    }
+    }, []);
 
   const handleMovieSelect = (movie) => {
     const isSelected = selectedMovies.includes(movie);

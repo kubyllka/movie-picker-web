@@ -12,8 +12,6 @@ function TokenRefresh() {
             Authorization: `Bearer ${refreshTokenFromStorage}`,
           },
       });
-
-
         if (response.ok) {
           const data = await response.json();
           if (data.success) {
@@ -30,7 +28,7 @@ function TokenRefresh() {
       }
     };
 
-    const tokenRefreshInterval = setInterval(refreshToken, 2 * 60 * 1000);
+    const tokenRefreshInterval = setInterval(refreshToken, 60 * 1000);
 
     return () => {
       clearInterval(tokenRefreshInterval);

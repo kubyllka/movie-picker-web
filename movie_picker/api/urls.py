@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth import logout
 from .views import (
     LoginView,
     RegistrationView,
@@ -8,10 +9,7 @@ from .views import (
     AddToWatchLaterView,
     WatchlistView,
     CheckFavoriteStatusView,
-    LogoutView
-
 )
-
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -30,6 +28,6 @@ urlpatterns = [
     path('watchlist/', WatchlistView.as_view(), name='watchlist'),
     path('check_favorite_status/', CheckFavoriteStatusView.as_view(), name='check_favorite_status'),
     path('register/', RegistrationView.as_view(), name='registration'),
-    path('logout/', LogoutView, name='logout'),
+    path('logout/', logout, name='logout'),
 
 ]
