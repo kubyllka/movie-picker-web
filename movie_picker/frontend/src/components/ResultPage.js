@@ -15,8 +15,6 @@ const ResultPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const moviesPerPage = 10;
-  const containerRef = useRef(null);
-  const isFirstLoad = useRef(true);
   const [isFavorite, setIsFavorite] = useState({});
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -34,17 +32,6 @@ const ResultPage = () => {
   const endIndex = startIndex + moviesPerPage;
   const currentMovies = recommendedMovies.slice(startIndex, endIndex);
 
-  useEffect(() => {
-    if (isFirstLoad.current) {
-      containerRef.current.scrollTo(0, 0);
-      isFirstLoad.current = false;
-    } else {
-      containerRef.current.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
-  }, [currentPage]);
 
   const addToWatchLater = (movie) => {
     fetch("http://127.0.0.1:8000/api/add_to_watch_later/", {
@@ -136,10 +123,11 @@ const ResultPage = () => {
     }
   }, [currentPage]);
 
+
   return (
-    <Container fluid={true} className="containerStyles" ref={containerRef}>
+    <Container fluid={true} className="containerStyles">
       {!isLoading && recommendedMovies.length > 0 && (
-        <Container fluid={true}>
+        <Container fluid={true} ref={containerRef}>
           {currentMovies.map((movie) => (
             <Card key={movie.id} className="cardStyles">
               <Row>

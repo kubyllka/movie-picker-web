@@ -18,7 +18,6 @@ import TokenRefresh from "./TokenRefresh";
 const App = () => {
   return (
     <Router>
-        <TokenRefresh/>
         <NavBar/>
       <Routes>
         <Route path="/" element={<HomePage />} />

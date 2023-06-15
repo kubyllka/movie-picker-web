@@ -1,19 +1,20 @@
 from django.urls import path
 from django.contrib.auth import logout
-from .views import (
-    LoginView,
-    RegistrationView,
-    MovieTestDataView,
-    RandomMovieView,
-    RemoveFromWatchLaterView,
-    AddToWatchLaterView,
-    WatchlistView,
-    CheckFavoriteStatusView,
-)
+
+from .api_views.auth_views import LoginView, RegistrationView
+
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView
+)
+
+from .api_views.movie_views import MovieTestDataView, RandomMovieView
+from .api_views.watchList_views import (
+    RemoveFromWatchLaterView,
+    AddToWatchLaterView,
+    WatchlistView,
+    CheckFavoriteStatusView
 )
 
 urlpatterns = [
