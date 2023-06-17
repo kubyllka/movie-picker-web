@@ -10,7 +10,7 @@ class RegistrationView(APIView):
         username = request.data.get('username')
         password = request.data.get('password')
         serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             user = authenticate(request, username=username, password=password)
             if user is not None:
@@ -39,4 +39,4 @@ class LoginView(APIView):
                 'success': True
             })
         else:
-            return Response({'success': False}, status=401)
+            return Response({'success': False})

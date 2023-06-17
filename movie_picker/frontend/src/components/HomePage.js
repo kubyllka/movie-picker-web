@@ -7,16 +7,9 @@ import logo from "../../static/images/logo.png";
 import { Link } from "react-router-dom";
 
 export const HomePage = () => {
-  const containerStyles = {
-    backgroundColor: "black",
-    color: "white",
-    padding: "0px",
-    overflowY: "auto",
-    minHeight: "100vh",
-  };
 
   return (
-    <Container fluid={true} style={containerStyles}>
+    <Container fluid={true} className="mainPageStyle">
       <Slider />
       <Container className="mt-5">
         <Row >

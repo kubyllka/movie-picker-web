@@ -1,8 +1,8 @@
-from random import randint
-from rest_framework.utils import json
+from random import randint, sample
 from django.db.models import Max
-from django.http import JsonResponse
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.utils import json
 
 from ..models import Movie
 from ..movie_recommendation_model import MovieRecommendationModel
@@ -12,32 +12,27 @@ from ..serializers import MovieSerializer
 class RandomMovieView(APIView):
     def get(self, request):
         max_id = Movie.objects.aggregate(max_id=Max("id"))["max_id"]
-        while True:
+        max_attempts = 1000
+        attempts = 0
+        while attempts < max_attempts:
             random_id = randint(1, max_id)
             try:
                 random_movie = Movie.objects.get(id=random_id)
-                break
+                serializer = MovieSerializer(random_movie)
+                return Response(serializer.data)
             except Movie.DoesNotExist:
-                continue
-
-        serializer = MovieSerializer(random_movie)
-        return JsonResponse(serializer.data)
+                attempts += 1
+        return Response({'message': 'No random movie found.'}, status=404)
 
 
 class MovieTestDataView(APIView):
     def get(self, request):
         max_id = Movie.objects.aggregate(max_id=Max("id"))["max_id"]
-        random_movies = []
-        while len(random_movies) < 10:
-            random_id = randint(1, max_id)
-            try:
-                random_movie = Movie.objects.get(id=random_id)
-                if random_movie not in random_movies:
-                    random_movies.append(random_movie)
-            except Movie.DoesNotExist:
-                continue
+        max_movies = 10
+        random_ids = sample(range(1, max_id + 1), max_movies)
+        random_movies = Movie.objects.filter(id__in=random_ids)
         serializer = MovieSerializer(random_movies, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return Response(serializer.data)
 
     def post(self, request):
         movies = json.loads(request.body)
@@ -47,4 +42,4 @@ class MovieTestDataView(APIView):
             'message': 'Recommendation successful',
             'recommended_movies': recommended_movies
         }
-        return JsonResponse(response_data)
+        return Response(response_data)

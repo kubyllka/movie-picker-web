@@ -7,10 +7,11 @@ from .models import (
 # API-key TMDB.com
 api_key = "fe8f0ac0a3d28301a5a540414d3052a2"
 
+base_url = 'https://api.themoviedb.org/3/'
 
 def fetch_movie_details():
     # URL of request
-    url = f'https://api.themoviedb.org/3/movie/top_rated?api_key={api_key}&page=7'
+    url = f'{base_url}top_rated?api_key={api_key}&page=7'
     try:
         # Request to TMDb API
         response = requests.get(url)
@@ -34,13 +35,13 @@ def fetch_movie_details():
             trailer_link = get_trailer_link(movie_id)  # Отримання посилання на трейлер
 
             # Get genres for movie from TMDb API
-            genre_url = f'https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}'
+            genre_url = f'{base_url}movie/{movie_id}?api_key={api_key}'
             genre_response = requests.get( genre_url )
             genre_data = genre_response.json()
             genres = genre_data['genres']
 
             # Get keywords for movie from TMDb API
-            keyword_url = f'https://api.themoviedb.org/3/movie/{movie_id}/keywords?api_key={api_key}'
+            keyword_url = f'{base_url}movie/{movie_id}/keywords?api_key={api_key}'
             keyword_response = requests.get( keyword_url )
             keyword_data = keyword_response.json()
             keywords = keyword_data['keywords']
@@ -77,7 +78,7 @@ def fetch_movie_details():
 def get_trailer_link(movie_id):
 
     # URL TMDB API-request
-    url = f'https://api.themoviedb.org/3/movie/{movie_id}/videos?api_key={api_key}'
+    url = f'{base_url}movie/{movie_id}/videos?api_key={api_key}'
 
     try:
         # Request to TMDb API

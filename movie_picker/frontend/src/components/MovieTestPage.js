@@ -163,11 +163,9 @@ const RandomMovie = () => {
             <Col>
               <h2>Test Information</h2>
               <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere est sit amet est maximus,
-                in volutpat risus efficitur. Nulla facilisi. Phasellus pharetra commodo turpis, id tincidunt sem
-                posuere vel. Quisque in nisi consequat, commodo neque ut, porta turpis. Donec semper odio vitae erat
-                facilisis dignissim. Nullam vulputate, nisi sit amet mattis tincidunt, eros purus pellentesque massa,
-                sed fermentum nisi enim sit amet mauris.
+                Take a simple test, choose among the proposed films, those that you may like,
+                based on genres, keywords, description. (you can choose several answers, but at least one).
+                Our system will sort all movies in our database according to your preferences)
               </p>
             </Col>
           </Row>

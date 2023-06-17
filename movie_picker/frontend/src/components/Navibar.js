@@ -37,8 +37,11 @@ const handleSignOut = async () => {
 
     await fetch("http://127.0.0.1:8000/api/logout/", {
       method: "POST",
-      credentials: "include"
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('access')}`,
+      },
     });
+
     localStorage.clear();
     setIsAuthenticated(false);
     navigate("/");

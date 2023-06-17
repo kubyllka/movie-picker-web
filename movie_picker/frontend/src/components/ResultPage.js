@@ -127,7 +127,7 @@ const ResultPage = () => {
   return (
     <Container fluid={true} className="containerStyles">
       {!isLoading && recommendedMovies.length > 0 && (
-        <Container fluid={true} ref={containerRef}>
+        <Container fluid={true}>
           {currentMovies.map((movie) => (
             <Card key={movie.id} className="cardStyles">
               <Row>

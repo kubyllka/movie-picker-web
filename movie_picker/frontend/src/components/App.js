@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
-import { BrowserRouter as Router, Routes, Route, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -13,7 +13,6 @@ import ResultPage from "./ResultPage"
 import ProfileUserPage from "./ProfileUserPage";
 import RegisterPage from "./RegisterPage";
 import Footer from "./Footer";
-import TokenRefresh from "./TokenRefresh";
 
 const App = () => {
   return (
