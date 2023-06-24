@@ -198,7 +198,7 @@ const RandomMovie = () => {
                       >
                         {selectedMovies.includes(movie) ? "Selected" : "Select"}
                       </Button>
-                      <Button variant="outline-info" href={movie.trailer_link}>
+                      <Button variant="outline-info" href={movie.trailer_link} target="_blank">
                         Trailer
                       </Button>
                       {isAuthenticated && (

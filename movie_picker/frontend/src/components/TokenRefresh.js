@@ -28,7 +28,7 @@ function TokenRefresh() {
       }
     };
 
-    const tokenRefreshInterval = setInterval(refreshToken, 60 * 1000);
+    const tokenRefreshInterval = setInterval(refreshToken, 5 * 60 * 1000);
 
     return () => {
       clearInterval(tokenRefreshInterval);

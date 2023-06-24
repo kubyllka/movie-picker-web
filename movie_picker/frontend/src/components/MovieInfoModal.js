@@ -25,7 +25,7 @@ const MovieDetailModal = ({ movie, handleClose }) => {
                 <p>Keywords: {movie.keywords.join(", ")}</p>
 
                 <ButtonGroup>
-                  <Button variant="outline-info" href={movie.trailer_link}>
+                  <Button variant="outline-info" href={movie.trailer_link} target="_blank">
                     Trailer
                   </Button>
                 </ButtonGroup>

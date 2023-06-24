@@ -11,7 +11,7 @@ base_url = 'https://api.themoviedb.org/3/'
 
 def fetch_movie_details():
     # URL of request
-    url = f'{base_url}top_rated?api_key={api_key}&page=7'
+    url = f'{base_url}movie/top_rated?api_key={api_key}&page=11'
     try:
         # Request to TMDb API
         response = requests.get(url)
@@ -25,14 +25,14 @@ def fetch_movie_details():
 
             # Check if movie exists. If yes - skip this movie. Else - add to database
             if Movie.objects.filter(tmdb_id=movie_id).exists():
-                continue  # Фільм вже існує, переходимо до наступного
+                continue
 
             title = movie_data['title']
             overview = movie_data['overview']
             poster_path = f"https://image.tmdb.org/t/p/w500{movie_data['poster_path']}"
             year = int(movie_data['release_date'].split('-')[0])
             vote_average = movie_data['vote_average']
-            trailer_link = get_trailer_link(movie_id)  # Отримання посилання на трейлер
+            trailer_link = get_trailer_link(movie_id)
 
             # Get genres for movie from TMDb API
             genre_url = f'{base_url}movie/{movie_id}?api_key={api_key}'
